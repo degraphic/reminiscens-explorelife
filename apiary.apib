@@ -100,7 +100,89 @@ POST /session
 User Registration
 <p>Creates a new user with initial personal details </p>
 --
-
+POST /user
+> Content-Type: application/json
+{  
+    "api_key" : "<api key for registered application>",  
+    "User" : {
+        "user_email":"<user email>" 
+        "auth_string":"<authentication string/password used to login >"
+    }
+    "Device" : {
+        "device_id" : "<id of the device that is creating the session> 
+    }
+    "Person" : {
+        "fullname":"<full name of the person>", 
+        "firstname": "<only first name>", 
+        "lastname": "<only last name>", 
+        "birthdate": "<birthdate in format dd/mm/yyyy>", 
+        "birthplace": "<textual description of birthplace>",
+        "birthplace_lat": "<birthplace latitude>", 
+        "birthplace_lon": "<birthplace longitude>",
+        "locale" : "IT_it"
+    }
+}
+< 200
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"User was created"   
+    },    
+    "Person" : {
+        "url": "/person/{id}", 
+        "fullname":"<full name of the person>", 
+        "firstname": "<only first name>", 
+        "lastname": "<only last name>", 
+        "birthdate": "<birthdate in format dd/mm/yyyy>", 
+        "birthplace": "<textual description of birthplace>",
+        "birthplace_lat": "<birthplace latitude>", 
+        "birthplace_lon": "<birthplace longitude>",
+        "current_home":"<current location in textual description>"
+        "current_coordinates":"<current location in textual description>"
+        "locale" : "IT_it"
+    }
+    "User" : {
+        "url": "/person/{id}/user", 
+        "user_id":"<user id as use in the User Management Module (external API)>"
+        "user_name":"<full name of the person>", 
+        "user_email": "<user email if there is one>", 
+        "user_modified": "<No if the user has not yet modified his nickname and is only using the automatic>",
+        "user_status" : "<uncofirmed untill confirmation link is accessed>"
+    }
+    "Session" : {
+        "auth_token" : "<new authentication token associated to the user's current session>",
+        "expiration" : "<minutes before the token expires, 60 minutes for unconfirmed users>" 
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "status_code": "41", 
+    "status_message":"API Key is not valid"
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "status_code": "42", 
+    "status_message":"Auth string is not valid"
+}
++++++
+< 501
+< Content-Type: application/json
+{  
+    "status_code": "51", 
+    "status_message":"The resource you tried to create is incomplete"
+}
++++++
+< 501
+< Content-Type: application/json
+{  
+    "status_code": "52", 
+    "status_message":"The resource you tried to create already exists"
+}
 
 --
 Person Resource
@@ -428,83 +510,239 @@ POST /person/{id}/lifestory
 {  
     "api_key" : "<api key for registered application>",  
     "auth_token" : "<valid session auth token>",
-    "User" : {
-        "user_id":"<user id as use in the User Management Module (external API)>" 
-        "auth_string":"<authentication string obtain after login in with >"
-    }
-    "Device" : {
-        "device_id" : "<id of the device that is creating the session> 
+    "Lifestory" : {
+        "...":"..."
     }
 }
 < 200
 < Content-Type: application/json
 {  
-    "status_code": "1", 
-    "status_message":"Resource was created",    
-    "Person" : {
-        "url": "/person/{id}", 
-        "fullname":"<full name of the person>", 
-        "firstname": "<only first name>", 
-        "lastname": "<only last name>", 
-        "birthdate": "<birthdate in format dd/mm/yyyy>", 
-        "birthplace": "<textual description of birthplace>",
-        "birthplace_lat": "<birthplace latitude>", 
-        "birthplace_lon": "<birthplace longitude>",
-        "current_home":"<current location in textual description>"
-        "current_coordinates":"<current location in textual description>"
-        "locale" : "IT_it"
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"Resource was created"
     }
-    "User" : {
-        "url": "/person/{id}/user", 
-        "user_id":"<user id as use in the User Management Module (external API)>"
-        "user_name":"<full name of the person>", 
-        "user_email": "<user email if there is one>", 
-        "user_modified": "<No if the user has not yet modified his nickname and is only using the automatic>", 
-    }
-    "Session" : {
-        "auth_token": "<new session id associated to the user>",   
+    "Lifestory" : {
+        "url": "/person/{id}"
     }
 }
 +++++
 < 401
 < Content-Type: application/json
 {  
-    "status_code": "41", 
-    "status_message":"API Key is not valid"
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
 }
 +++++
 < 401
 < Content-Type: application/json
 {  
-    "status_code": "42", 
-    "status_message":"Session ID is not valid"
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{    
+    "Response_Status" : {
+        "status_code": "51", 
+        "status_message":"The resource you tried to create is incomplete"
+    }
 }
 +++++
 < 501
 < Content-Type: application/json
 {  
-    "status_code": "51", 
-    "status_message":"The resource you tried to create is incomplete"
+    "Response_Status" : {
+        "status_code": "52", 
+        "status_message":"The resource you tried to create already exists"
+    }
+}
+
+-
+Get a person's particular life story
+-
+GET /person/{id}/lifestory/{id}
+> Content-Type: application/json
+{  
+    "api_key" : "<api key for registered application>",  
+    "auth_token" : "<valid session auth token>",
+}
+< 200
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"Resource was created"
+    }
+    "Lifestory" : {
+        "url": "/person/{id}"
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{    
+    "Response_Status" : {
+        "status_code": "51", 
+        "status_message":"The resource you tried to create is incomplete"
+    }
 }
 +++++
 < 501
 < Content-Type: application/json
 {  
-    "status_code": "52", 
-    "status_message":"The resource you tried to create already exists"
+    "Response_Status" : {
+        "status_code": "52", 
+        "status_message":"The resource you tried to create already exists"
+    }
 }
 
+-
+Get a person's timeline of life stories
+-
+GET /person/{id}/lifestory
+> Content-Type: application/json
+{  
+    "api_key" : "<api key for registered application>",  
+    "auth_token" : "<valid session auth token>",
+}
+< 200
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"Resource was created"
+    },
+    "Timeline" : [
+        "Lifestory" : {
+            "id": "{id}"
+        }, 
+        "Lifestory" : {
+            "id": "{id}"
+        }
+    ]
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{    
+    "Response_Status" : {
+        "status_code": "51", 
+        "status_message":"The resource you tried to create is incomplete"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "52", 
+        "status_message":"The resource you tried to create already exists"
+    }
+}
 
+-
+Update a story
+-
+PUT /person/{id}/lifestory/{id}
+> Content-Type: application/json
+{  
+    "api_key" : "<api key for registered application>",  
+    "auth_token" : "<valid session auth token>",
+    "Lifestory" : {
+        "...":"..."
+    }
+}
+< 200
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"Resource was created"
+    }
+    "Lifestory" : {
+        "url": "/person/{id}"
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
+}
++++++
+< 401
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{    
+    "Response_Status" : {
+        "status_code": "51", 
+        "status_message":"The resource you tried to create is incomplete"
+    }
+}
++++++
+< 501
+< Content-Type: application/json
+{  
+    "Response_Status" : {
+        "status_code": "52", 
+        "status_message":"The resource you tried to create already exists"
+    }
+}
 
 --
 Memento resource 
-The session resource allows the platform to manage authentication and authorization to 
-execute operations on the API. 
---
-
-
---
-Timeline resource 
 The session resource allows the platform to manage authentication and authorization to 
 execute operations on the API. 
 --
