@@ -205,8 +205,10 @@ POST /person
 < 200
 < Content-Type: application/json
 {  
-    "status_code": "1", 
-    "status_message":"Resource was created",    
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"Resource was created"
+    },    
     "Person" : {
         "url": "/person/{id}", 
         "fullname":"<full name of the person>", 
