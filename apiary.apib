@@ -41,19 +41,23 @@ GET /person/{id}
 < 200 
 < Content-Type: application/json
 { 
-    "status_code": "1", 
-    "status_message":"OK",
+    "Response_Status" : { 
+        "status_code": "1", 
+        "status_message":"OK"
+    },
     "Person" : {
         "url": "/person/{id}", 
         "fullname":"<full name of the person>", 
         "firstname": "<only first name>", 
+        "middlename": "<only middle name>", 
         "lastname": "<only last name>", 
         "birthdate": "<birthdate in format dd/mm/yyyy>",
         "birthplace": "<textual description of birthplace>",
         "birthplace_lat": "<birthplace latitude>", 
         "birthplace_lon": "<birthplace longitude>", 
-        "current_home":"<current location in textual description>"
-        "current_coordinates":"<current location in textual description>"
+        "current_home":"<current home location in textual description>",
+        "current_home_lat":"<current home location latitudes>",
+        "current_home_lon":"<current home location latitudes>",
         "locale" : "IT_it"
     }
 }
@@ -61,15 +65,19 @@ GET /person/{id}
 < 401
 < Content-Type: application/json
 {  
-    "status_code": "41", 
-    "status_message":"API Key is not valid"
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
 }
 +++++
 < 401
 < Content-Type: application/json
-{  
-    "status_code": "42", 
-    "status_message":"Session ID is not valid"
+{
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
 }
 
 -
@@ -90,29 +98,35 @@ GET /person/{id}/user
 < 200 
 < Content-Type: application/json
 { 
-    "status_code": "1", 
-    "status_message":"OK",
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"OK"
+    }
     "User" : {
         "url": "/person/{id}/user", 
         "user_id":"<user id as use in the User Management Module (external API)>"
-        "user_name":"<full name of the person>", 
+        "user_name":"<user nickname used for login purposes>", 
         "user_email": "<user email if there is one>", 
-        "user_modified": "<No if the user has not yet modified his nickname and is only using the automatic>", 
+        "user_modified": "<No if the user has not yet modified his nickname and is only using the automatic>"
     }
 }
 +++++
 < 401
 < Content-Type: application/json
 {  
-    "status_code": "41", 
-    "status_message":"API Key is not valid"
+    "Response_Status" : {
+        "status_code": "41", 
+        "status_message":"API Key is not valid"
+    }
 }
 +++++
 < 401
 < Content-Type: application/json
 {  
-    "status_code": "42", 
-    "status_message":"Session ID is not valid"
+    "Response_Status" : {
+        "status_code": "42", 
+        "status_message":"Session ID is not valid"
+    }
 }
 
 GET /person/56
@@ -124,8 +138,10 @@ GET /person/56
 < 200 
 < Content-Type: application/json
 { 
-    "status_code": "1", 
-    "status_message":"OK",
+    "Response_Status" : {
+        "status_code": "1", 
+        "status_message":"OK"
+    }
     "Person" : {
         "url": "/person/56", 
         "fullname":"Ugo Fantozzi", 
@@ -135,7 +151,9 @@ GET /person/56
         "birthplace": "Genova, Italy",
         "birthplace_lat": 44.4167, 
         "birthplace_lon": 8.9239, 
-        "current_home":"Genova, Italy"
+        "current_home":"Genova, Italy",
+        "current_home_lat": 8.9239,
+        "current_home_lon": 44.4167, 
         "locale" : "IT_it"
     }
 }
@@ -167,11 +185,10 @@ not be created</p>
 -
 POST /person
 > Content-Type: application/json
-{  
-    "api_key": "<api key for registered application>",
-    "session_id": "<session id of the application issuing the request>",    
+{
+    "api_key" : "<api key for registered application>",
+    "session_id" : "<session id of the application issuing the request>",
     "Person" : {
-        "url": "/person/{id}", 
         "fullname":"<full name of the person>", 
         "firstname": "<only first name>", 
         "lastname": "<only last name>", 
@@ -179,8 +196,9 @@ POST /person
         "birthplace": "<textual description of birthplace>",
         "birthplace_lat": "<birthplace latitude>", 
         "birthplace_lon": "<birthplace longitude>",
-        "current_home":"<current location in textual description>"
-        "current_coordinates":"<current location in textual description>"
+        "current_home":"<current location in textual description>",
+        "current_home_lat":"<current home location latitudes>",
+        "current_home_lon":"<current home location latitudes>",
         "locale" : "IT_it"
     }
 }
